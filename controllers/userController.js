@@ -145,7 +145,9 @@ const sendOtp=async(req,res)=>{
         if(obj){
             let num = Math.floor(Math.random()*100000)+""
             let otp = num.padEnd(5, "0")
+            console.log(otp, "OTP has generated")
             await userModel.findByIdAndUpdate({"_id":obj._id},{"otp":otp})
+
             const info = await transporter.sendMail({
                 from: '"Backend Team" <v24hfs7p1@gmail.com>',
                 to: obj._id,
@@ -153,6 +155,7 @@ const sendOtp=async(req,res)=>{
                 html: `OTP for resetting password : ${otp}` // HTML body
             });
             if(info.accepted.length!=0){
+                console.log(otp, "OTP has sent")
                 res.json({"msg":"otp sent"})
             }
             else{
@@ -163,8 +166,9 @@ const sendOtp=async(req,res)=>{
             res.json({"msg":"Account doesn't exists please continue with register"})
         } 
     }
-    catch{
+    catch(err){
         res.json({"msg":"Error while sending OTP"})
+        
     }
 }
 const validateOtp=async(req,res)=>{
