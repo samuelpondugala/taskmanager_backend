@@ -135,8 +135,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true, // true for 465, false for other ports
   auth: {
-    user: "v24hfs7p1@gmail.com",
-    pass: process.env.appPassword,
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASS,
   },
 });
 const sendOtp=async(req,res)=>{
@@ -149,7 +149,7 @@ const sendOtp=async(req,res)=>{
             await userModel.findByIdAndUpdate({"_id":obj._id},{"otp":otp})
 
             const info = await transporter.sendMail({
-                from: '"Backend Team" <v24hfs7p1@gmail.com>',
+                from: `"Backend Team" <${process.env.EMAIL}>`,
                 to: obj._id,
                 subject: "Password Reset OTP",
                 html: `OTP for resetting password : ${otp}` // HTML body
